@@ -18,7 +18,6 @@ function getAccessToken(bearerToken) {
     .populate('User')
     .populate('OAuthClient')
     .then(function(accessToken) {
-      log.info('at', accessToken)
       if (!accessToken) return false;
       var token = accessToken;
       token.user = token.User;
@@ -55,12 +54,12 @@ function getClient(clientId, clientSecret) {
 
 
 function getUser(username, password) {
+  log.info("getUser", username, password)
   return User
     .findOne({
-      username: username
+      user_name: username
     })
     .then(function(user) {
-      log.info("u", user)
       return user.password == password ? user : false;
     })
     .catch(function(err) {
@@ -136,9 +135,7 @@ function saveToken(token, client, user) {
       return _.assign( // expected to return client and user, but not returning
         {
           client: client,
-          user: user,
-          access_token: token.accessToken, // proxy
-          refresh_token: token.refreshToken, // proxy
+          user: user
         },
         token
       )
@@ -203,7 +200,6 @@ function getUserFromClient(client) {
     .findOne(options)
     .populate('User')
     .then(function(client) {
-      log.info(client)
       if (!client) return false;
       if (!client.User) return false;
       return client.User;
@@ -223,7 +219,6 @@ function getRefreshToken(refreshToken) {
     .populate('User')
     .populate('OAuthClient')
     .then(function(savedRT) {
-      log.info("srt", savedRT)
       var tokenTemp = {
         user: savedRT ? savedRT.User : {},
         client: savedRT ? savedRT.OAuthClient : {},

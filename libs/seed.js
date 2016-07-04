@@ -13,35 +13,45 @@ var User = mongodb.User;
 OAuthScope.find({}).remove()
   .then(function() {
     OAuthScope.create({
-      scope: 'profile',
-      is_default: false
-    }, {
-      scope: 'defaultscope',
+      scope: 'admin',
       is_default: true
-    })
+    },
+      {
+        scope: 'user_admin',
+        is_default: true
+      },
+      {
+        scope: 'user',
+        is_default: false
+      })
       .then(function() {
-        log.info('finished populating OAuthScope');
+        // log.info('finished populating OAuthScope');
       });
   });
 
 User.find({}).remove()
   .then(function() {
     User.create({
-      username: 'admin',
-      password: 'admin'
+      user_name: 'admin',
+      password: 'admin',
+      first_name: "tech",
+      last_name: "welin",
+      email: "xavier.zhang@welintech.com",
+      email_verified: true,
+      scope: "admin"
     })
       .then(function(user) {
-        log.info('finished populating users', user);
+        // log.info('finished populating users', user);
         return OAuthClient.find({}).remove()
           .then(function() {
             OAuthClient.create({
-              client_id: 'democlient',
-              client_secret: 'democlientsecret',
-              redirect_uri: 'http://localhost/cb',
+              client_id: 'flytracer_admin',
+              client_secret: 'flytracer_admin_key',
+              redirect_uri: 'http://localhost:3000',
               User: user._id
             })
               .then(function(client) {
-                log.info('finished populating OAuthClient', client);
+                // log.info('finished populating OAuthClient', client);
               }).catch(log.error);
           });
 

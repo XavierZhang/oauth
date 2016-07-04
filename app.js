@@ -6,18 +6,18 @@ var log = require('./libs/log')(module);
 
 var app = express();
 
-
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-require('./libs/expressOAuth')(app)
+require('./libs/express-oauth')(app);
+require('./libs/seed');
 
 var port = process.env.PORT || config.port;
 
 app.get("/", function(req, res) {
-  res.send("Welcome to my oauth api.");
+  res.json("Welcome to my oauth api.");
 });
 
 // catch 404 and forward to error handler
