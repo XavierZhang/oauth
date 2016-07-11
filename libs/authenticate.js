@@ -1,3 +1,5 @@
+'use strict';
+
 var oauthServer = require('oauth2-server');
 var Request = oauthServer.Request;
 var Response = oauthServer.Response;

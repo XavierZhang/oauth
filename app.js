@@ -3,22 +3,32 @@ var compression = require('compression');
 var config = require('./config');
 var bodyParser = require('body-parser');
 var log = require('./libs/log')(module);
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+require('./libs/passport/init');
 
 var app = express();
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(cookieParser());
+app.use(session({
+  secret: config.sessionSalt
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
+
 require('./libs/express-oauth')(app);
-require('./libs/seed');
 
-var port = process.env.PORT || config.port;
-
-app.get("/", function(req, res) {
-  res.json("Welcome to my oauth api.");
-});
+require("./routes")(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -55,6 +65,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-app.listen(port, function() {
-  log.info("OAuth service is running on PORT: " + port);
-});
+// app.listen(port, function() {
+//   log.info("OAuth service is running on PORT: " + port);
+// });
+module.exports = app;

@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var OAuthAuthorizationCodeSchema = new Schema({
-  auth_code: String,
+  authorization_code: String,
   expires: Date,
   redirect_uri: String,
   scope: String,
@@ -18,4 +18,4 @@ var OAuthAuthorizationCodeSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('oauth_auth_code', OAuthAuthorizationCodeSchema);
+module.exports = mongoose.model('oauth_authorization_code', OAuthAuthorizationCodeSchema);

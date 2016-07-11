@@ -1,12 +1,19 @@
+'use strict';
+
 var oauthServer = require('oauth2-server');
 var log = require('./log')(module);
 var Request = require('oauth2-server').Request;
 var Response = require('oauth2-server').Response;
-var db = require('./mongodb');
+var db = require('./sqldb');
 var authenticate = require('./authenticate');
+var config = require('../config');
+
+if (config.db === 'mongo') {
+  db = require('./mongodb');
+}
 
 var oauth = new oauthServer({
-  model: require('./models.js'),
+  model: config.db === 'mongo' ? require('./models.js') : require('./models-sql.js'),
   grants: ['password', 'authorization_code', 'refresh_token']
 });
 
@@ -56,26 +63,26 @@ module.exports = function(app) {
     });
   });
 
-  app.get('/secure', authenticate(), function(req, res) {
-    res.json({
-      message: 'Secure data'
-    })
-  });
-
-  app.get('/me', authenticate(), function(req, res) {
-    res.json({
-      me: req.user,
-      messsage: 'Authorization success, Without Scopes, Try accessing /profile with `profile` scope',
-      description: 'Try postman https://www.getpostman.com/collections/37afd82600127fbeef28',
-      more: 'pass `profile` scope while Authorize'
-    })
-  });
-
-  app.get('/profile', authenticate({
-    scope: 'profile'
-  }), function(req, res) {
-    res.json({
-      profile: req.user
-    })
-  });
+// app.get('/secure', authenticate(), function(req, res) {
+//   res.json({
+//     message: 'Secure data'
+//   })
+// });
+//
+// app.get('/me', authenticate(), function(req, res) {
+//   res.json({
+//     me: req.user,
+//     messsage: 'Authorization success, Without Scopes, Try accessing /profile with `profile` scope',
+//     description: 'Try postman https://www.getpostman.com/collections/37afd82600127fbeef28',
+//     more: 'pass `profile` scope while Authorize'
+//   })
+// });
+//
+// app.get('/profile', authenticate({
+//   scope: 'profile'
+// }), function(req, res) {
+//   res.json({
+//     profile: req.user
+//   })
+// });
 }

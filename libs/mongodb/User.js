@@ -15,7 +15,15 @@ var UserSchema = new Schema({
   license: Number, //授权数量
   salt: String, //随机生成的密码key
   status: Number, //0-活动状态，1-锁定状态
-  scope: String
+  scope: String,
+  create_date: {
+    type: Date,
+    default: Date.now
+  },
+  update_date: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model('user', UserSchema);

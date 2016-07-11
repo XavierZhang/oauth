@@ -1,3 +1,5 @@
+'use strict';
+
 var winston = require('winston');
 var config = require('../config');
 winston.emitErrs = true;
@@ -8,13 +10,15 @@ function logger(module) {
     exitOnError: false
   });
 
-  winstonLogger.add(require('winston-mongodb').MongoDB, {
-    level: "error",
-    db: config.mongo.uri,
-    label: getFilePath(module),
-    json: true,
-    handleException: true
-  });
+  if (config.db === 'mongo') {
+    winstonLogger.add(require('winston-mongodb').MongoDB, {
+      level: "error",
+      db: config.mongo.uri,
+      label: getFilePath(module),
+      json: true,
+      handleException: true
+    });
+  }
 
   winstonLogger.add(require('winston-mail').Mail, {
     level: "error",

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <form action="/login" method="post">
+      <div>
+        <div style="float:left">
+          用户名：
+        </div>
+        <div style="float:right">
+          <input type="text" name="username" style="width:100px"/>
+        </div>
+      </div>
+      <div style="clear:both"/>
+      <div>
+        <div style="float:left">
+          密码：
+        </div>
+        <div style="float:right">
+          <input type="password" name="password" style="width:100px"/>
+        </div>
+      </div>
+      <div style="clear:both"/>
+      <div style="text-align:center">
+        <input type="submit" text="登录" />
+      </div>
+    </form>
+  </body>
+</html>
